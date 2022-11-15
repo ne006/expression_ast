@@ -5,6 +5,12 @@ require "expression_ast/grammar/arithmetic"
 RSpec.describe ExpressionAST::Grammar::Arithmetic do
   subject(:grammar) { described_class }
 
+  describe ".lexer" do
+    it "should return Arithmetic::Lexer" do
+      expect(grammar.lexer).to be(described_class::Lexer)
+    end
+  end
+
   describe ".literal" do
     it "should return Arithmetic::Node" do
       expect(grammar.literal).to be(described_class::Node)
