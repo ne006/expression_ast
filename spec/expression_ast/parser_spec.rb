@@ -2,6 +2,7 @@
 
 require "expression_ast/parser"
 require "expression_ast/grammar/arithmetic"
+require "expression_ast/grammar/boolean"
 
 RSpec.describe ExpressionAST::Parser do
   subject(:parser) { described_class.new(grammar) }
@@ -119,6 +120,75 @@ RSpec.describe ExpressionAST::Parser do
 
         it "builds AST which returns correct result" do
           expect(tree.result).to eql(77.0)
+        end
+      end
+    end
+
+    context "with Boolean grammar" do
+      let(:grammar) { ExpressionAST::Grammar::Boolean }
+
+      context "with literal expression" do
+        let(:expression) { "9560" }
+        let(:expected_tree) do
+          grammar::Node.new("9560")
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(true)
+        end
+      end
+
+      context "with group expression" do
+        let(:expression) { "(5)" }
+        let(:expected_tree) do
+          grammar::Group.new(grammar::Node.new("5"))
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(true)
+        end
+      end
+
+      context "with binary operator expression" do
+        let(:expression) { "2 AND 2" }
+        let(:expected_tree) do
+          grammar::Operators::Conjunction.new(grammar::Node.new("2"), grammar::Node.new("2"))
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(true)
+        end
+      end
+
+      context "with simple expression" do
+        let(:expression) { "2 AND false OR (true OR nil)" }
+        let(:expected_tree) do
+          grammar::Operators::Disjunction.new(
+            grammar::Operators::Conjunction.new(grammar::Node.new("2"), grammar::Node.new("false")),
+            grammar::Group.new(
+              grammar::Operators::Disjunction.new(grammar::Node.new("true"), grammar::Node.new("nil"))
+            )
+          )
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(true)
         end
       end
     end
