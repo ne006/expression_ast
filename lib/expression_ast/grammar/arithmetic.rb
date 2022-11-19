@@ -9,6 +9,7 @@ require "expression_ast/grammar/arithmetic/operators/multiplication"
 require "expression_ast/grammar/arithmetic/operators/division"
 require "expression_ast/grammar/arithmetic/operators/addition"
 require "expression_ast/grammar/arithmetic/operators/substraction"
+require "expression_ast/grammar/arithmetic/operators/power"
 
 module ExpressionAST
   module Grammar
@@ -28,6 +29,7 @@ module ExpressionAST
 
         def operators
           [
+            [self::Operators::Power],
             [self::Operators::Multiplication, self::Operators::Division],
             [self::Operators::Addition, self::Operators::Substraction]
           ]

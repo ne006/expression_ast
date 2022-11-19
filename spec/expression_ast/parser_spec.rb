@@ -81,7 +81,7 @@ RSpec.describe ExpressionAST::Parser do
       end
 
       context "with complex expression" do
-        let(:expression) { "9/3 + 4*(2+1*(7 - 3 )) + 5 * 10" }
+        let(:expression) { "9/3 + 4*(2+1*(7 - 3 )) + 5 * (2^3 + 2)" }
         let(:expected_tree) do
           grammar::Operators::Addition.new(
             grammar::Operators::Division.new(grammar::Node.new(9), grammar::Node.new(3)),
@@ -100,7 +100,15 @@ RSpec.describe ExpressionAST::Parser do
                   )
                 )
               ),
-              grammar::Operators::Multiplication.new(grammar::Node.new(5), grammar::Node.new(10))
+              grammar::Operators::Multiplication.new(
+                grammar::Node.new(5),
+                grammar::Group.new(
+                  grammar::Operators::Addition.new(
+                    grammar::Operators::Power.new(grammar::Node.new(2), grammar::Node.new(3)),
+                    grammar::Node.new(2)
+                  )
+                )
+              )
             )
           )
         end

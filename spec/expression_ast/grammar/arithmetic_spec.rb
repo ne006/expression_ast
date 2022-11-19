@@ -27,6 +27,7 @@ RSpec.describe ExpressionAST::Grammar::Arithmetic do
     it "should return Arithmetic operators grouped by their priority" do
       expect(grammar.operators).to eql(
         [
+          [described_class::Operators::Power],
           [described_class::Operators::Multiplication, described_class::Operators::Division],
           [described_class::Operators::Addition, described_class::Operators::Substraction]
         ]
