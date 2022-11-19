@@ -5,6 +5,12 @@ require "expression_ast/grammar/boolean"
 RSpec.describe ExpressionAST::Grammar::Boolean do
   subject(:grammar) { described_class }
 
+  describe ".lexer" do
+    it "should return Arithmetic::Lexer" do
+      expect(grammar.lexer).to be(described_class::Lexer)
+    end
+  end
+
   describe ".literal" do
     it "should return Boolean::Node" do
       expect(grammar.literal).to be(described_class::Node)
