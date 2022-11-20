@@ -157,6 +157,21 @@ RSpec.describe ExpressionAST::Parser do
         end
       end
 
+      context "with unary operator expression" do
+        let(:expression) { "NOT true" }
+        let(:expected_tree) do
+          grammar::Operators::Negation.new(grammar::Node.new("true"))
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(false)
+        end
+      end
+
       context "with binary operator expression" do
         let(:expression) { "2 AND 2" }
         let(:expected_tree) do
@@ -172,7 +187,30 @@ RSpec.describe ExpressionAST::Parser do
         end
       end
 
-      context "with simple expression" do
+      context "with complex expression" do
+        let(:expression) { "true AND (nil OR NOT false)" }
+        let(:expected_tree) do
+          grammar::Operators::Conjunction.new(
+            grammar::Node.new("true"),
+            grammar::Group.new(
+              grammar::Operators::Disjunction.new(
+                grammar::Node.new("nil"),
+                grammar::Operators::Negation.new(grammar::Node.new("false"))
+              )
+            )
+          )
+        end
+
+        it "builds AST" do
+          expect(tree).to be == expected_tree
+        end
+
+        it "builds AST which returns correct result" do
+          expect(tree.result).to eql(true)
+        end
+      end
+
+      context "with another complex expression" do
         let(:expression) { "2 AND false OR (true OR nil)" }
         let(:expected_tree) do
           grammar::Operators::Disjunction.new(
