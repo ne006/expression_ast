@@ -7,6 +7,7 @@ require "expression_ast/grammar/boolean/group"
 
 require "expression_ast/grammar/boolean/operators/conjunction"
 require "expression_ast/grammar/boolean/operators/disjunction"
+require "expression_ast/grammar/boolean/operators/negation"
 
 module ExpressionAST
   module Grammar
@@ -26,6 +27,7 @@ module ExpressionAST
 
         def operators
           [
+            [self::Operators::Negation],
             [self::Operators::Conjunction],
             [self::Operators::Disjunction]
           ]

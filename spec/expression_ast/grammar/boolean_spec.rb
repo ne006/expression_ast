@@ -27,6 +27,7 @@ RSpec.describe ExpressionAST::Grammar::Boolean do
     it "should return Boolean operators grouped by their priority" do
       expect(grammar.operators).to eql(
         [
+          [described_class::Operators::Negation],
           [described_class::Operators::Conjunction],
           [described_class::Operators::Disjunction]
         ]
