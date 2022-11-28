@@ -7,7 +7,7 @@ module ExpressionAST
     module Boolean
       module Operators
         class Disjunction < ExpressionAST::Base::BinaryOperator
-          def self.value
+          def self.token
             "OR"
           end
 

@@ -7,8 +7,14 @@ module ExpressionAST
     class UnaryOperator
       attr_reader :operand
 
-      def self.value
-        raise NotImplemented
+      class << self
+        def value
+          raise NotImplementedError
+        end
+
+        def token
+          value
+        end
       end
 
       def initialize(operand)
@@ -20,7 +26,7 @@ module ExpressionAST
       end
 
       def result
-        raise NotImplemented
+        raise NotImplementedError
       end
 
       def to_s

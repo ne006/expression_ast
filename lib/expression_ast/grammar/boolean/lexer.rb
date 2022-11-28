@@ -29,7 +29,7 @@ module ExpressionAST
             when grammar.group.start_token
               @tokens << char
               String.new
-            when grammar.group.end_token, *grammar.operators.flatten.map(&:value)
+            when grammar.group.end_token, *grammar.operators.flatten.map(&:token)
               @tokens << curr_expr if curr_expr != ""
               @tokens << char
               String.new

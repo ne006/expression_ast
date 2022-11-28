@@ -7,7 +7,7 @@ module ExpressionAST
     module Arithmetic
       module Operators
         class Addition < ExpressionAST::Base::BinaryOperator
-          def self.value
+          def self.token
             "+"
           end
 

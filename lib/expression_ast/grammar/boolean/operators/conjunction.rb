@@ -7,7 +7,7 @@ module ExpressionAST
     module Boolean
       module Operators
         class Conjunction < ExpressionAST::Base::BinaryOperator
-          def self.value
+          def self.token
             "AND"
           end
 
