@@ -7,7 +7,7 @@ module ExpressionAST
     module Boolean
       module Operators
         class Negation < ExpressionAST::Base::UnaryOperator
-          def self.value
+          def self.token
             "NOT"
           end
 

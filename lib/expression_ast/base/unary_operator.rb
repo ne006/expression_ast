@@ -8,12 +8,22 @@ module ExpressionAST
       attr_reader :operand
 
       class << self
-        def value
-          raise NotImplementedError
+        def token(token = nil)
+          return @token if token.nil?
+
+          @token = token
         end
 
-        def token
-          value
+        def result(&block)
+          return @result unless block_given?
+
+          @result = block
+        end
+
+        def stringify(&block)
+          return @stringify unless block_given?
+
+          @stringify = block
         end
       end
 
@@ -21,16 +31,22 @@ module ExpressionAST
         @operand = operand
       end
 
-      def value
-        self.class.value
+      def token
+        self.class.token
       end
 
       def result
-        raise NotImplementedError
+        raise NotImplementedError unless self.class.result
+
+        self.class.result.call(operand)
       end
 
       def to_s
-        "#{value} #{operand}"
+        if self.class.stringify
+          self.class.stringify.call(self.class.token, operand)
+        else
+          "#{self.class.token} #{operand}"
+        end
       end
 
       def ==(other)
