@@ -23,7 +23,7 @@ RSpec.describe ExpressionAST::Base::BinaryOperator do
       subject(:test_class) do
         Class.new(described_class) do
           token "+"
-          result { |left, right| "#{left}#{right}" }
+          result { |_l, _r| "#{left_operand}#{right_operand}" }
         end
       end
 
@@ -52,7 +52,7 @@ RSpec.describe ExpressionAST::Base::BinaryOperator do
       subject(:test_class) do
         Class.new(described_class) do
           token "+"
-          stringify { |token, left, right| "#{token} #{left} #{right}" }
+          stringify { |_t, _l, _r| "#{token} #{left_operand} #{right_operand}" }
         end
       end
 

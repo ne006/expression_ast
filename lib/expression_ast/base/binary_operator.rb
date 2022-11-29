@@ -39,12 +39,12 @@ module ExpressionAST
       def result
         raise NotImplementedError unless self.class.result
 
-        self.class.result.call(left_operand, right_operand)
+        instance_exec(left_operand, right_operand, &self.class.result)
       end
 
       def to_s
         if self.class.stringify
-          self.class.stringify.call(self.class.token, left_operand, right_operand)
+          instance_exec(self.class.token, left_operand, right_operand, &self.class.stringify)
         else
           "#{left_operand} #{self.class.token} #{right_operand}"
         end
