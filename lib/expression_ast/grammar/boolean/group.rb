@@ -4,7 +4,7 @@ require "expression_ast/base/group"
 
 module ExpressionAST
   module Grammar
-    module Boolean
+    class Boolean < ::ExpressionAST::Base::Grammar
       class Group < ExpressionAST::Base::Group
         class << self
           def start_token

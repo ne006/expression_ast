@@ -4,7 +4,7 @@ require "expression_ast/base/node"
 
 module ExpressionAST
   module Grammar
-    module Arithmetic
+    class Arithmetic < ::ExpressionAST::Base::Grammar
       class Node < ExpressionAST::Base::Node
         def initialize(value)
           super

@@ -4,7 +4,7 @@ require "expression_ast/base/unary_operator"
 
 module ExpressionAST
   module Grammar
-    module Boolean
+    class Boolean < ::ExpressionAST::Base::Grammar
       module Operators
         class Negation < ExpressionAST::Base::UnaryOperator
           def self.token

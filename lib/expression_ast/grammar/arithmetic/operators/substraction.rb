@@ -4,7 +4,7 @@ require "expression_ast/base/binary_operator"
 
 module ExpressionAST
   module Grammar
-    module Arithmetic
+    class Arithmetic < ::ExpressionAST::Base::Grammar
       module Operators
         class Substraction < ExpressionAST::Base::BinaryOperator
           def self.token
