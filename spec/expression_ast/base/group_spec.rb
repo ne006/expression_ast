@@ -36,7 +36,7 @@ RSpec.describe ExpressionAST::Base::Group do
         Class.new(described_class) do
           start_token "("
           end_token ")"
-          stringify { |start_token, end_token, value| "#{start_token} - #{value} - #{end_token}" }
+          stringify { |_st, _et, _v| "#{start_token} - #{value} - #{end_token}" }
         end
       end
 

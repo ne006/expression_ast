@@ -25,13 +25,21 @@ module ExpressionAST
         end
       end
 
+      def start_token
+        self.class.start_token
+      end
+
+      def end_token
+        self.class.end_token
+      end
+
       def result
         value.result
       end
 
       def to_s
         if self.class.stringify
-          self.class.stringify.call(self.class.start_token, self.class.end_token, value)
+          instance_exec(self.class.start_token, self.class.end_token, value, &self.class.stringify)
         else
           "#{self.class.start_token} #{value} #{self.class.end_token}"
         end
