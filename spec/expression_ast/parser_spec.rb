@@ -16,7 +16,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with literal expression" do
         let(:expression) { "9560" }
         let(:expected_tree) do
-          grammar::Node.new(9560)
+          grammar.literal.new(9560)
         end
 
         it "builds AST" do
@@ -31,7 +31,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with group expression" do
         let(:expression) { "(5)" }
         let(:expected_tree) do
-          grammar::Group.new(grammar::Node.new(5))
+          grammar.group.new(grammar.literal.new(5))
         end
 
         it "builds AST" do
@@ -46,7 +46,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with binary operator expression" do
         let(:expression) { "2 + 2" }
         let(:expected_tree) do
-          grammar::Operators::Addition.new(grammar::Node.new(2), grammar::Node.new(2))
+          grammar.operators.find_by_token("+").new(grammar.literal.new(2), grammar.literal.new(2))
         end
 
         it "builds AST" do
@@ -61,12 +61,12 @@ RSpec.describe ExpressionAST::Parser do
       context "with simple expression" do
         let(:expression) { "2 + 2 * (5 - 3)" }
         let(:expected_tree) do
-          grammar::Operators::Addition.new(
-            grammar::Node.new(2),
-            grammar::Operators::Multiplication.new(
-              grammar::Node.new(2),
-              grammar::Group.new(
-                grammar::Operators::Substraction.new(grammar::Node.new(5), grammar::Node.new(3))
+          grammar.operators.find_by_token("+").new(
+            grammar.literal.new(2),
+            grammar.operators.find_by_token("*").new(
+              grammar.literal.new(2),
+              grammar.group.new(
+                grammar.operators.find_by_token("-").new(grammar.literal.new(5), grammar.literal.new(3))
               )
             )
           )
@@ -84,29 +84,29 @@ RSpec.describe ExpressionAST::Parser do
       context "with complex expression" do
         let(:expression) { "9/3 + 4*(2+1*(7 - 3 )) + 5 * (2^3 + 2)" }
         let(:expected_tree) do
-          grammar::Operators::Addition.new(
-            grammar::Operators::Division.new(grammar::Node.new(9), grammar::Node.new(3)),
-            grammar::Operators::Addition.new(
-              grammar::Operators::Multiplication.new(
-                grammar::Node.new(4),
-                grammar::Group.new(
-                  grammar::Operators::Addition.new(
-                    grammar::Node.new(2),
-                    grammar::Operators::Multiplication.new(
-                      grammar::Node.new(1),
-                      grammar::Group.new(
-                        grammar::Operators::Substraction.new(grammar::Node.new(7), grammar::Node.new(3))
+          grammar.operators.find_by_token("+").new(
+            grammar.operators.find_by_token("/").new(grammar.literal.new(9), grammar.literal.new(3)),
+            grammar.operators.find_by_token("+").new(
+              grammar.operators.find_by_token("*").new(
+                grammar.literal.new(4),
+                grammar.group.new(
+                  grammar.operators.find_by_token("+").new(
+                    grammar.literal.new(2),
+                    grammar.operators.find_by_token("*").new(
+                      grammar.literal.new(1),
+                      grammar.group.new(
+                        grammar.operators.find_by_token("-").new(grammar.literal.new(7), grammar.literal.new(3))
                       )
                     )
                   )
                 )
               ),
-              grammar::Operators::Multiplication.new(
-                grammar::Node.new(5),
-                grammar::Group.new(
-                  grammar::Operators::Addition.new(
-                    grammar::Operators::Power.new(grammar::Node.new(2), grammar::Node.new(3)),
-                    grammar::Node.new(2)
+              grammar.operators.find_by_token("*").new(
+                grammar.literal.new(5),
+                grammar.group.new(
+                  grammar.operators.find_by_token("+").new(
+                    grammar.operators.find_by_token("^").new(grammar.literal.new(2), grammar.literal.new(3)),
+                    grammar.literal.new(2)
                   )
                 )
               )
