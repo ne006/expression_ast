@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "expression_ast/grammar/boolean/lexer"
+require "expression_ast/base/lexer"
 
 require "expression_ast/grammar/boolean/node"
 require "expression_ast/grammar/boolean/group"
@@ -14,7 +14,7 @@ module ExpressionAST
     module Boolean
       class << self
         def lexer
-          ExpressionAST::Grammar::Boolean::Lexer
+          ExpressionAST::Base::Lexer
         end
 
         def literal

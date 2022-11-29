@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "expression_ast/grammar/arithmetic/lexer"
+require "expression_ast/base/lexer"
 
 require "expression_ast/grammar/arithmetic/node"
 require "expression_ast/grammar/arithmetic/group"
@@ -16,7 +16,7 @@ module ExpressionAST
     module Arithmetic
       class << self
         def lexer
-          ExpressionAST::Grammar::Arithmetic::Lexer
+          ExpressionAST::Base::Lexer
         end
 
         def literal

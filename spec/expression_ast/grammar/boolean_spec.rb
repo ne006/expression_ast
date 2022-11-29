@@ -6,8 +6,8 @@ RSpec.describe ExpressionAST::Grammar::Boolean do
   subject(:grammar) { described_class }
 
   describe ".lexer" do
-    it "should return Arithmetic::Lexer" do
-      expect(grammar.lexer).to be(described_class::Lexer)
+    it "should return Base::Lexer" do
+      expect(grammar.lexer).to be(ExpressionAST::Base::Lexer)
     end
   end
 
