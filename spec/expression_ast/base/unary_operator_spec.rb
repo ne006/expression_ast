@@ -23,7 +23,7 @@ RSpec.describe ExpressionAST::Base::UnaryOperator do
       subject(:test_class) do
         Class.new(described_class) do
           token "%"
-          result { |operand| "[#{operand}]" }
+          result { |_o| "[#{operand}]" }
         end
       end
 
@@ -52,7 +52,7 @@ RSpec.describe ExpressionAST::Base::UnaryOperator do
       subject(:test_class) do
         Class.new(described_class) do
           token "%"
-          stringify { |token, operand| "#{token}[#{operand}]" }
+          stringify { |_t, _o| "#{token}[#{operand}]" }
         end
       end
 
