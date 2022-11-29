@@ -2,31 +2,37 @@
 
 require "expression_ast/base/grammar"
 
-require "expression_ast/grammar/boolean/node"
-require "expression_ast/grammar/boolean/group"
-
-require "expression_ast/grammar/boolean/operators/conjunction"
-require "expression_ast/grammar/boolean/operators/disjunction"
-require "expression_ast/grammar/boolean/operators/negation"
-
 module ExpressionAST
   module Grammar
     class Boolean < ::ExpressionAST::Base::Grammar
-      class << self
-        def literal
-          ExpressionAST::Grammar::Boolean::Node
+      literal do
+        result do
+          case value
+          when true, "true", "TRUE" then true
+          when false, "false", "FALSE", "nil", "NIL", "null", "NULL" then false
+          else !value.nil?
+          end
         end
+      end
 
-        def group
-          ExpressionAST::Grammar::Boolean::Group
+      operators do
+        grouped do
+          unary_operator do
+            token "NOT"
+            result { !operand.result }
+          end
         end
-
-        def operators
-          [
-            [self::Operators::Negation],
-            [self::Operators::Conjunction],
-            [self::Operators::Disjunction]
-          ]
+        grouped do
+          binary_operator do
+            token "AND"
+            result { left_operand.result && right_operand.result }
+          end
+        end
+        grouped do
+          binary_operator do
+            token "OR"
+            result { left_operand.result || right_operand.result }
+          end
         end
       end
     end

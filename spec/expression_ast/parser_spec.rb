@@ -130,7 +130,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with literal expression" do
         let(:expression) { "9560" }
         let(:expected_tree) do
-          grammar::Node.new("9560")
+          grammar.literal.new("9560")
         end
 
         it "builds AST" do
@@ -145,7 +145,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with group expression" do
         let(:expression) { "(5)" }
         let(:expected_tree) do
-          grammar::Group.new(grammar::Node.new("5"))
+          grammar.group.new(grammar.literal.new("5"))
         end
 
         it "builds AST" do
@@ -160,7 +160,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with unary operator expression" do
         let(:expression) { "NOT true" }
         let(:expected_tree) do
-          grammar::Operators::Negation.new(grammar::Node.new("true"))
+          grammar.operators.find_by_token("NOT").new(grammar.literal.new("true"))
         end
 
         it "builds AST" do
@@ -175,7 +175,7 @@ RSpec.describe ExpressionAST::Parser do
       context "with binary operator expression" do
         let(:expression) { "2 AND 2" }
         let(:expected_tree) do
-          grammar::Operators::Conjunction.new(grammar::Node.new("2"), grammar::Node.new("2"))
+          grammar.operators.find_by_token("AND").new(grammar.literal.new("2"), grammar.literal.new("2"))
         end
 
         it "builds AST" do
@@ -190,12 +190,12 @@ RSpec.describe ExpressionAST::Parser do
       context "with complex expression" do
         let(:expression) { "true AND (nil OR NOT false)" }
         let(:expected_tree) do
-          grammar::Operators::Conjunction.new(
-            grammar::Node.new("true"),
-            grammar::Group.new(
-              grammar::Operators::Disjunction.new(
-                grammar::Node.new("nil"),
-                grammar::Operators::Negation.new(grammar::Node.new("false"))
+          grammar.operators.find_by_token("AND").new(
+            grammar.literal.new("true"),
+            grammar.group.new(
+              grammar.operators.find_by_token("OR").new(
+                grammar.literal.new("nil"),
+                grammar.operators.find_by_token("NOT").new(grammar.literal.new("false"))
               )
             )
           )
@@ -213,10 +213,10 @@ RSpec.describe ExpressionAST::Parser do
       context "with another complex expression" do
         let(:expression) { "2 AND false OR (true OR nil)" }
         let(:expected_tree) do
-          grammar::Operators::Disjunction.new(
-            grammar::Operators::Conjunction.new(grammar::Node.new("2"), grammar::Node.new("false")),
-            grammar::Group.new(
-              grammar::Operators::Disjunction.new(grammar::Node.new("true"), grammar::Node.new("nil"))
+          grammar.operators.find_by_token("OR").new(
+            grammar.operators.find_by_token("AND").new(grammar.literal.new("2"), grammar.literal.new("false")),
+            grammar.group.new(
+              grammar.operators.find_by_token("OR").new(grammar.literal.new("true"), grammar.literal.new("nil"))
             )
           )
         end
