@@ -26,15 +26,23 @@ module ExpressionAST
       attr_reader :value
 
       def initialize(value)
-        @value = self.class.parse_value ? self.class.parse_value.call(value) : value
+        @value = value
+
+        return unless self.class.parse_value
+
+        @value = instance_exec(value, &self.class.parse_value)
       end
 
       def result
-        self.class.result ? self.class.result.call(value) : value
+        return value unless self.class.result
+
+        instance_exec(value, &self.class.result)
       end
 
       def to_s
-        self.class.stringify ? self.class.stringify.call(value) : value.to_s
+        return value.to_s unless self.class.stringify
+
+        instance_exec(value, &self.class.stringify)
       end
 
       def ==(other)

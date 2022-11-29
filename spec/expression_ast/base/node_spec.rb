@@ -9,7 +9,7 @@ RSpec.describe ExpressionAST::Base::Node do
     context "with value parser proc specified" do
       subject(:test_class) do
         Class.new(described_class) do
-          parse_value { |value| "[#{value}]" }
+          parse_value { |_v| "[#{value}]" }
         end
       end
 
@@ -35,7 +35,7 @@ RSpec.describe ExpressionAST::Base::Node do
     context "with result proc specified" do
       subject(:test_class) do
         Class.new(described_class) do
-          result { |value| "[#{value}]" }
+          result { |_v| "[#{value}]" }
         end
       end
 
