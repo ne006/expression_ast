@@ -5,26 +5,46 @@ require "expression_ast/base/node"
 
 RSpec.describe ExpressionAST::Base::Group do
   describe ".start_token" do
-    subject(:test_class) do
-      Class.new(described_class) do
-        start_token "("
+    context "with specified start_token" do
+      subject(:test_class) do
+        Class.new(described_class) do
+          start_token "["
+        end
+      end
+
+      it "saves start_token" do
+        expect(test_class.start_token).to eql("[")
       end
     end
 
-    it "saves start_token" do
-      expect(test_class.start_token).to eql("(")
+    context "without specified start_token" do
+      subject(:test_class) { Class.new(described_class) }
+
+      it "returns default end_token" do
+        expect(test_class.start_token).to eql("(")
+      end
     end
   end
 
   describe ".end_token" do
-    subject(:test_class) do
-      Class.new(described_class) do
-        end_token ")"
+    context "with specified end_token" do
+      subject(:test_class) do
+        Class.new(described_class) do
+          end_token "]"
+        end
+      end
+
+      it "saves end_token" do
+        expect(test_class.end_token).to eql("]")
       end
     end
 
-    it "saves end_token" do
-      expect(test_class.end_token).to eql(")")
+    context "without specified end_token" do
+      subject(:test_class) { Class.new(described_class) }
+
+      it "returns default end_token" do
+        expect(test_class.end_token).to eql(")")
+      end
     end
   end
 

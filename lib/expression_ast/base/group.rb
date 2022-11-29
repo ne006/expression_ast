@@ -23,7 +23,17 @@ module ExpressionAST
 
           @stringify = block
         end
+
+        def inherited(base)
+          super
+
+          base.start_token "("
+          base.end_token ")"
+        end
       end
+
+      start_token "("
+      end_token ")"
 
       def start_token
         self.class.start_token
