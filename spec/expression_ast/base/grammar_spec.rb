@@ -106,4 +106,117 @@ RSpec.describe ExpressionAST::Base::Grammar do
       end
     end
   end
+
+  describe ".operators" do
+    context "grouped by priority" do
+      context "with binary operator" do
+        let(:test_class) do
+          p = def_proc
+          Class.new(described_class) do
+            operators { grouped { binary_operator(&p) } }
+          end
+        end
+        let(:def_proc) do
+          proc do
+            token "+"
+            result { |a, b| a + b }
+          end
+        end
+
+        it "should return a subclass of Base::BinaryOperator" do
+          expect(test_class.operators.first.first.ancestors).to include(ExpressionAST::Base::BinaryOperator)
+        end
+
+        it "should execute definition block" do
+          allow(Class).to receive(:new).with(described_class).and_call_original
+          expect(Class).to receive(:new).with(ExpressionAST::Base::BinaryOperator) do |_base_class, &def_block|
+            expect(def_block).to eql(def_proc)
+          end
+
+          test_class
+        end
+      end
+
+      context "with unary operator" do
+        let(:test_class) do
+          p = def_proc
+          Class.new(described_class) do
+            operators { grouped { unary_operator(&p) } }
+          end
+        end
+        let(:def_proc) do
+          proc do
+            token "not"
+            result(&:!)
+          end
+        end
+
+        it "should return a subclass of Base::UnaryOperator" do
+          expect(test_class.operators.first.first.ancestors).to include(ExpressionAST::Base::UnaryOperator)
+        end
+
+        it "should execute definition block" do
+          allow(Class).to receive(:new).with(described_class).and_call_original
+          expect(Class).to receive(:new).with(ExpressionAST::Base::UnaryOperator) do |_base_class, &def_block|
+            expect(def_block).to eql(def_proc)
+          end
+
+          test_class
+        end
+      end
+
+      context "with several operators" do
+        let(:test_class) do
+          Class.new(described_class) do
+            operators do
+              grouped do
+                unary_operator { token "a" }
+                binary_operator { token "b" }
+              end
+              grouped do
+                binary_operator { token "c" }
+              end
+            end
+          end
+        end
+        let(:ordered_tokens) { [%w[a b], %w[c]] }
+
+        it "should return list of operator groups" do
+          expect(test_class.operators.map { _1.map(&:token) }).to eql(ordered_tokens)
+        end
+      end
+
+      context "without operators" do
+        let(:test_class) { Class.new(described_class) }
+
+        it "should return empty list without groups" do
+          expect(test_class.operators).to be_empty
+        end
+      end
+    end
+
+    describe "#find_by_token" do
+      let(:test_class) do
+        Class.new(described_class) do
+          operators do
+            grouped do
+              unary_operator { token "a" }
+              binary_operator { token "b" }
+            end
+            grouped do
+              binary_operator { token "c" }
+            end
+          end
+        end
+      end
+
+      it "should return first operator with mathcing token" do
+        expect(test_class.operators.find_by_token("c"))
+          .to have_attributes(
+            token: "c",
+            ancestors: include(ExpressionAST::Base::BinaryOperator)
+          )
+      end
+    end
+  end
 end
