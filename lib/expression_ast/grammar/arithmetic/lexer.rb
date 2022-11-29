@@ -1,22 +1,16 @@
 # frozen_string_literal: true
 
-require "expression_ast/grammar/arithmetic"
-
 module ExpressionAST
   module Grammar
     module Arithmetic
       class Lexer
-        attr_reader :expression
+        attr_reader :grammar
 
-        def initialize(expression)
-          @expression = expression
+        def initialize(grammar)
+          @grammar = grammar
         end
 
-        def grammar
-          ExpressionAST::Grammar::Arithmetic
-        end
-
-        def tokens # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        def tokens(expression) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
           return @tokens if @tokens
 
           @tokens = []

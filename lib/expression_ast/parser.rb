@@ -12,7 +12,7 @@ module ExpressionAST
     end
 
     def build_expression_ast(expression)
-      tokens = grammar.lexer.new(expression).tokens
+      tokens = grammar.lexer.new(grammar).tokens(expression)
 
       build_node_from_tokens(tokens)
     end
