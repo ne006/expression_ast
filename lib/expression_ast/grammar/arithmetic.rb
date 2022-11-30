@@ -1,38 +1,40 @@
 # frozen_string_literal: true
 
-require "expression_ast/grammar/arithmetic/lexer"
-
-require "expression_ast/grammar/arithmetic/node"
-require "expression_ast/grammar/arithmetic/group"
-
-require "expression_ast/grammar/arithmetic/operators/multiplication"
-require "expression_ast/grammar/arithmetic/operators/division"
-require "expression_ast/grammar/arithmetic/operators/addition"
-require "expression_ast/grammar/arithmetic/operators/substraction"
-require "expression_ast/grammar/arithmetic/operators/power"
+require "expression_ast/base/grammar"
 
 module ExpressionAST
   module Grammar
-    module Arithmetic
-      class << self
-        def lexer
-          ExpressionAST::Grammar::Arithmetic::Lexer
-        end
+    class Arithmetic < ::ExpressionAST::Base::Grammar
+      literal do
+        parse_value { value.to_f }
+      end
 
-        def literal
-          ExpressionAST::Grammar::Arithmetic::Node
+      operators do # rubocop:disable Metrics/BlockLength
+        grouped do
+          binary_operator do
+            token "^"
+            result { left_operand.result**right_operand.result }
+          end
         end
-
-        def group
-          ExpressionAST::Grammar::Arithmetic::Group
+        grouped do
+          binary_operator do
+            token "*"
+            result { left_operand.result * right_operand.result }
+          end
+          binary_operator do
+            token "/"
+            result { left_operand.result / right_operand.result }
+          end
         end
-
-        def operators
-          [
-            [self::Operators::Power],
-            [self::Operators::Multiplication, self::Operators::Division],
-            [self::Operators::Addition, self::Operators::Substraction]
-          ]
+        grouped do
+          binary_operator do
+            token "+"
+            result { left_operand.result + right_operand.result }
+          end
+          binary_operator do
+            token "-"
+            result { left_operand.result - right_operand.result }
+          end
         end
       end
     end

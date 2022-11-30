@@ -12,7 +12,7 @@ module ExpressionAST
     end
 
     def build_expression_ast(expression)
-      tokens = grammar.lexer.new(expression).tokens
+      tokens = grammar.lexer.new(grammar).tokens(expression)
 
       build_node_from_tokens(tokens)
     end
@@ -30,7 +30,7 @@ module ExpressionAST
     end
 
     def operator?(tokens)
-      (tokens & grammar.operators.flatten.map(&:value)).any?
+      (tokens & grammar.operators.flatten.map(&:token)).any?
     end
 
     def parse_operator(tokens) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
@@ -43,7 +43,7 @@ module ExpressionAST
           int_idx = -1
 
           tokens.each_with_index do |token, idx|
-            next unless token == operator.value
+            next unless token == operator.token
 
             groups_closed = (
               tokens.slice(0..idx).select { |t| t == grammar.group.start_token }.size ==
@@ -93,7 +93,7 @@ module ExpressionAST
       operator_klass = nil
 
       grammar.operators.each do |operator_group|
-        operator_klass = operator_group.find { |o| o.value == operator_token }
+        operator_klass = operator_group.find { |o| o.token == operator_token }
 
         break if operator_klass
       end

@@ -3,6 +3,84 @@
 require "expression_ast/base/node"
 
 RSpec.describe ExpressionAST::Base::Node do
+  describe ".parse_value" do
+    subject(:node) { test_class.new(5) }
+
+    context "with value parser proc specified" do
+      subject(:test_class) do
+        Class.new(described_class) do
+          parse_value { |_v| "[#{value}]" }
+        end
+      end
+
+      it "parses value on initialization" do
+        expect(node.value).to eql("[5]")
+      end
+    end
+
+    context "without value parser proc" do
+      subject(:test_class) do
+        Class.new(described_class)
+      end
+
+      it "saves value as-is" do
+        expect(node.value).to eql(5)
+      end
+    end
+  end
+
+  describe ".result" do
+    subject(:node) { test_class.new(5) }
+
+    context "with result proc specified" do
+      subject(:test_class) do
+        Class.new(described_class) do
+          result { |_v| "[#{value}]" }
+        end
+      end
+
+      it "passes value through result proc" do
+        expect(node.result).to eql("[5]")
+      end
+    end
+
+    context "without result proc" do
+      subject(:test_class) do
+        Class.new(described_class)
+      end
+
+      it "returns value as-is" do
+        expect(node.value).to eql(5)
+      end
+    end
+  end
+
+  describe ".stringify" do
+    subject(:node) { test_class.new(5) }
+
+    context "with stringify proc specified" do
+      subject(:test_class) do
+        Class.new(described_class) do
+          stringify { |value| "[#{value}]" }
+        end
+      end
+
+      it "passes value through stringify proc" do
+        expect(node.to_s).to eql("[5]")
+      end
+    end
+
+    context "without stringify proc" do
+      subject(:test_class) do
+        Class.new(described_class)
+      end
+
+      it "returns result of value.to_s" do
+        expect(node.to_s).to eql("5")
+      end
+    end
+  end
+
   describe "#==" do
     subject(:one) { described_class.new("a") }
 

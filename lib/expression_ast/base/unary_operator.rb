@@ -7,24 +7,46 @@ module ExpressionAST
     class UnaryOperator
       attr_reader :operand
 
-      def self.value
-        raise NotImplemented
+      class << self
+        def token(token = nil)
+          return @token if token.nil?
+
+          @token = token
+        end
+
+        def result(&block)
+          return @result unless block_given?
+
+          @result = block
+        end
+
+        def stringify(&block)
+          return @stringify unless block_given?
+
+          @stringify = block
+        end
       end
 
       def initialize(operand)
         @operand = operand
       end
 
-      def value
-        self.class.value
+      def token
+        self.class.token
       end
 
       def result
-        raise NotImplemented
+        raise NotImplementedError unless self.class.result
+
+        instance_exec(operand, &self.class.result)
       end
 
       def to_s
-        "#{value} #{operand}"
+        if self.class.stringify
+          instance_exec(self.class.token, operand, &self.class.stringify)
+        else
+          "#{self.class.token} #{operand}"
+        end
       end
 
       def ==(other)

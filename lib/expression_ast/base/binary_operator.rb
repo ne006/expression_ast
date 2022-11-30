@@ -7,8 +7,24 @@ module ExpressionAST
     class BinaryOperator
       attr_reader :left_operand, :right_operand
 
-      def self.value
-        raise NotImplemented
+      class << self
+        def token(token = nil)
+          return @token if token.nil?
+
+          @token = token
+        end
+
+        def result(&block)
+          return @result unless block_given?
+
+          @result = block
+        end
+
+        def stringify(&block)
+          return @stringify unless block_given?
+
+          @stringify = block
+        end
       end
 
       def initialize(left_operand, right_operand)
@@ -16,16 +32,22 @@ module ExpressionAST
         @right_operand = right_operand
       end
 
-      def value
-        self.class.value
+      def token
+        self.class.token
       end
 
       def result
-        raise NotImplemented
+        raise NotImplementedError unless self.class.result
+
+        instance_exec(left_operand, right_operand, &self.class.result)
       end
 
       def to_s
-        "#{left_operand} #{value} #{right_operand}"
+        if self.class.stringify
+          instance_exec(self.class.token, left_operand, right_operand, &self.class.stringify)
+        else
+          "#{left_operand} #{self.class.token} #{right_operand}"
+        end
       end
 
       def ==(other)
