@@ -104,4 +104,34 @@ RSpec.describe ExpressionAST::Base::BinaryOperator do
       end
     end
   end
+
+  describe "#to_h" do
+    subject(:test_class) do
+      Class.new(described_class) do
+        token "%"
+      end
+    end
+
+    subject(:node) { test_class.new(ExpressionAST::Base::Node.new("a"), ExpressionAST::Base::Node.new("b")) }
+
+    it "should return a Hash" do
+      expect(node.to_h).to be_a(Hash)
+    end
+
+    it "should return a Hash with a type field of group" do
+      expect(node.to_h).to include(type: :binary_operator)
+    end
+
+    it "should return a Hash with a token field with token as value" do
+      expect(node.to_h).to include(token: node.token)
+    end
+
+    it "should return a Hash with a left_operand field with left_operand#to_h as value" do
+      expect(node.to_h).to include(left_operand: node.left_operand.to_h)
+    end
+
+    it "should return a Hash with a right_operand field with right_operand#to_h as value" do
+      expect(node.to_h).to include(right_operand: node.right_operand.to_h)
+    end
+  end
 end
