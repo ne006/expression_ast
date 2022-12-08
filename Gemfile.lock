@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    expression_ast (0.2.0)
+    expression_ast (0.3.0)
 
 GEM
   remote: https://rubygems.org/
