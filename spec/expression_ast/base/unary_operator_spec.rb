@@ -104,4 +104,30 @@ RSpec.describe ExpressionAST::Base::UnaryOperator do
       end
     end
   end
+
+  describe "#to_h" do
+    subject(:test_class) do
+      Class.new(described_class) do
+        token "%"
+      end
+    end
+
+    subject(:node) { test_class.new(ExpressionAST::Base::Node.new("a")) }
+
+    it "should return a Hash" do
+      expect(node.to_h).to be_a(Hash)
+    end
+
+    it "should return a Hash with a type field of group" do
+      expect(node.to_h).to include(type: :unary_operator)
+    end
+
+    it "should return a Hash with a token field with token as value" do
+      expect(node.to_h).to include(token: node.token)
+    end
+
+    it "should return a Hash with a operand field with operand#to_h as value" do
+      expect(node.to_h).to include(operand: node.operand.to_h)
+    end
+  end
 end

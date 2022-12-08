@@ -23,11 +23,30 @@ parser = ExpressionAST::Parser.new(ExpressionAST::Grammar::Boolean)
 tree = parser.build_expression_ast('true AND true')
 ```
 
+or pass a `Hash` tree to build it:
+
+```ruby
+parser = ExpressionAST::Parser.new(ExpressionAST::Grammar::Boolean)
+tree = parser.build_expression_ast({
+  'type' => 'binary_operator',
+  'token' => 'AND',
+  'left_operand' => { 'type' => 'node', 'value' => 'true' },
+  'right_operand' => { 'type' => 'node', 'value' => 'true' }
+})
+```
+
 Call `#result` on the tree to evaluate the expression:
 
 ```ruby
 tree.result
 # => true
+```
+
+Call `#to_h` to serialize it:
+
+```ruby
+tree.to_h
+# => { type: :binary_operator, token: 'AND', left_operand: { type: :node, value: 'true'}, right_operand: { type: :node, value: 'true'} }
 ```
 
 ### Grammar definition

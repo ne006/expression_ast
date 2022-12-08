@@ -109,4 +109,22 @@ RSpec.describe ExpressionAST::Base::Group do
       end
     end
   end
+
+  describe "#to_h" do
+    subject(:test_class) { Class.new(described_class) }
+
+    subject(:node) { test_class.new(ExpressionAST::Base::Node.new(5)) }
+
+    it "should return a Hash" do
+      expect(node.to_h).to be_a(Hash)
+    end
+
+    it "should return a Hash with a type field of group" do
+      expect(node.to_h).to include(type: :group)
+    end
+
+    it "should return a Hash with a value field with value#to_h as value" do
+      expect(node.to_h).to include(value: node.value.to_h)
+    end
+  end
 end

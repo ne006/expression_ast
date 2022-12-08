@@ -50,6 +50,15 @@ module ExpressionAST
         end
       end
 
+      def to_h
+        {
+          type: :binary_operator,
+          token: token,
+          left_operand: left_operand.to_h,
+          right_operand: right_operand.to_h
+        }
+      end
+
       def ==(other)
         return false unless other.is_a?(self.class)
 

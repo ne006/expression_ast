@@ -45,6 +45,10 @@ module ExpressionAST
         instance_exec(value, &self.class.stringify)
       end
 
+      def to_h
+        { type: :node, value: value }
+      end
+
       def ==(other)
         return false unless other.is_a?(self.class)
 

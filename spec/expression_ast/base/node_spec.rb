@@ -111,4 +111,22 @@ RSpec.describe ExpressionAST::Base::Node do
       end
     end
   end
+
+  describe "#to_h" do
+    subject(:test_class) { Class.new(described_class) }
+
+    subject(:node) { test_class.new(5) }
+
+    it "should return a Hash" do
+      expect(node.to_h).to be_a(Hash)
+    end
+
+    it "should return a Hash with a type field of node" do
+      expect(node.to_h).to include(type: :node)
+    end
+
+    it "should return a Hash with a value field" do
+      expect(node.to_h).to include(value: 5)
+    end
+  end
 end
