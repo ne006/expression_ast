@@ -12,9 +12,14 @@ module ExpressionAST
     end
 
     def build_expression_ast(expression)
-      tokens = grammar.lexer.new(grammar).tokens(expression)
+      case expression
+      when String
+        tokens = grammar.lexer.new(grammar).tokens(expression)
 
-      build_node_from_tokens(tokens)
+        build_node_from_tokens(tokens)
+      when Hash
+        build_node_from_hash(expression)
+      end
     end
 
     protected
@@ -99,6 +104,26 @@ module ExpressionAST
       end
 
       operator_klass
+    end
+
+    def build_node_from_hash(orig_attrs) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+      attrs = orig_attrs.transform_keys(&:to_sym)
+
+      case attrs[:type].to_sym
+      when :node
+        grammar.literal.new(attrs[:value])
+      when :group
+        grammar.group.new(build_node_from_hash(attrs[:value]))
+      when :unary_operator
+        resolve_operator(attrs[:token].to_s)
+        &.new(build_node_from_hash(attrs[:operand]))
+      when :binary_operator
+        resolve_operator(attrs[:token].to_s)
+        &.new(
+          build_node_from_hash(attrs[:left_operand]),
+          build_node_from_hash(attrs[:right_operand])
+        )
+      end
     end
   end
 end
