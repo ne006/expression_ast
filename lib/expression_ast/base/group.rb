@@ -55,6 +55,10 @@ module ExpressionAST
         end
       end
 
+      def to_h
+        { type: :group, value: value.to_h }
+      end
+
       def ==(other)
         return false unless other.is_a?(self.class)
 
