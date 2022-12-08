@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Abstract syntax tree parser"
   spec.homepage = "https://github.com/ne006/expression_ast"
   spec.license = "MIT"
-  spec.required_ruby_version = "= 3.1.2"
+  spec.required_ruby_version = ">= 2.7"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
