@@ -49,6 +49,14 @@ module ExpressionAST
         end
       end
 
+      def to_h
+        {
+          type: :unary_operator,
+          token: token,
+          operand: operand.to_h
+        }
+      end
+
       def ==(other)
         return false unless other.is_a?(self.class)
 
