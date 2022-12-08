@@ -40,11 +40,11 @@ module ExpressionAST
             end
         end
 
-        def operators(&)
+        def operators(&def_proc)
           if block_given?
             @operators = []
 
-            instance_exec(&)
+            instance_exec(&def_proc)
           else
             (@operators ||= []).tap do |l|
               def l.find_by_token(token)
@@ -58,8 +58,8 @@ module ExpressionAST
 
         protected
 
-        def grouped(&)
-          @operators << OperatorGrouper.new.call(&)
+        def grouped(&def_proc)
+          @operators << OperatorGrouper.new.call(&def_proc)
         end
       end
 
@@ -68,8 +68,8 @@ module ExpressionAST
           @operators = []
         end
 
-        def call(&)
-          instance_exec(&)
+        def call(&def_proc)
+          instance_exec(&def_proc)
           @operators
         end
 
